@@ -1,0 +1,62 @@
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd(32, 16, 2);
+void setup()
+{
+  pinMode(2, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(7, OUTPUT);
+  pinMode(8, OUTPUT);
+  lcd.init();
+  lcd.begin(16,2);
+  lcd.backlight();
+  lcd.clear();
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  	int airQuality = analogRead(A2);
+  	Serial.println(airQuality);
+    airQuality = map(airQuality,93,715,0,500);
+    lcd.setCursor(0,0);
+  if(airQuality<=50){
+    digitalWrite(7, HIGH);
+    digitalWrite(2, LOW);
+    digitalWrite(3, LOW);
+    digitalWrite(5, LOW);
+    digitalWrite(8, LOW);
+    lcd.clear();
+    lcd.print("GOOD");
+  }
+  else if(airQuality<=100){
+    digitalWrite(5, HIGH);
+    digitalWrite(2, LOW);
+    digitalWrite(3, LOW);
+    digitalWrite(7, LOW);
+    digitalWrite(8, LOW);
+    lcd.clear();
+    lcd.print("MODERATE");
+  }
+  else if(airQuality<=150){
+    digitalWrite(3, HIGH);
+    digitalWrite(2, LOW);
+    digitalWrite(5, LOW);
+    digitalWrite(7, LOW);
+    digitalWrite(8, LOW);
+    lcd.clear();
+    lcd.print("UNHEALTHY");
+  }
+  else{
+    digitalWrite(2, HIGH);
+    digitalWrite(8, HIGH);
+    digitalWrite(3, LOW);
+    digitalWrite(5, LOW);
+    digitalWrite(7, LOW);
+    lcd.clear();
+    lcd.print("VERY UNHEALTHY");
+  }
+    lcd.setCursor(2,1);
+    lcd.print(airQuality); 
+    delay(1500); 
+}
